@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Title</title>
+    <style>
+        .circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 1px solid black;
+            margin: 40px;
+        }
+
+        .red {
+            background: red;
+        }
+
+        .blue {
+            background: blue;
+        }
+
+        .green {
+            background: green;
+        }
+
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="container">
+        <h1 class="my-5 text-md-center text-sm-left">Vue.js Basis</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">@</span>
+                    </div>
+                    <input @input="changeName" type="text" class="form-control" placeholder="Username" aria-label="Username"
+                           aria-describedby="basic-addon1">
+                </div>
+                <h2>Hello {{name}}!</h2>
+                <p>Concatenation {{a}} + {{name}}: {{a + name}}</p>
+                <p>Work functions 'sayHello()': {{sayHello()}}</p>
+                <p>If statment:{{ isOk ? 'I am Ok!' : 'I am Not Ok.' }}</p>
+                <h3>Function revers ({{string}}): {{string.split('').reverse().join('')}}</h3>
+                <hr>
+                <p>Example link: <a :href="search.url">{{search.name}}</a></p>
+                <p>Example HTML cod: <span v-html="link"></span></p>
+                <hr>
+                <input type="text" v-model="inputVal">
+                <h2>{{inputVal}}</h2>
+                <hr>
+                <div
+                        class="circle"
+                        @click="isActive = !isActive"
+                        :class="getCssClasses"
+                ></div>
+                <hr>
+                <p>В зависимости от css класса имеющегося в стилях, мы меняем с помощью
+                    ввода имени этого класса, фон круга. Используем объект.<br>
+                    Цвет: blue, red, green</p>
+                <div class="circle" :class="color"></div>
+                <input type="text" v-model="color">
+
+                <hr>
+                <p>В зависимости от css класса имеющегося в стилях, мы меняем с помощью
+                    ввода имени этого класса, фон круга. Используем массив. <br>
+                Цвет: blue, red, green</p>
+                <div class="circle" :class="[color,{'red':isActive}]"></div>
+                <input type="text" v-model="color">
+                <hr>
+                <p>Изменение inline styles. Здесь идёт привязка не к названиям css классов в стилях,
+                    а непосредственно к css свойствам. В данном примере к background, поэтому будут
+                    работать любые цвета. Например grey</p>
+                <div class="circle" :style="circleClasses"></div>
+               Цвет фона: <input type="text" v-model="color">
+                <br> Высота круга: <input type="text" v-model="height">
+                <hr>
+<p></p>
+                <div class="circle" :style="[circleClasses, {'width': height+'px'}]"></div>
+            </div>
+            <div class="col-md-6">
+                <h2>{{title}} = {{counter}}</h2>
+                <button @click="riseCounter(5,'Изменено на 5', $event)">Увеличить на 5</button>
+                <button @click="riseCounter(10,'Изменено на 10', $event)">Увеличить на 10</button>
+                <hr>
+                <h2 @mouseover="onHover">Counter 2 = {{counter2}}</h2>
+                <button @click="counter2++">Увеличить</button>
+                <hr>
+                <p>Модификатор prevent отменяет дефолтное событие (ссылка не работает): </p>
+                <h4><a @click.prevent="" href="http://google.com" target="_blank">Google</a></h4>
+                <h4 @mousemove="handleMouseMove">X: {{x}} / Y: {{y}}
+                    <span @mousemove.stop="">Не изменять (использован модификатор stop)</span>
+                </h4>
+                <hr>
+                <input type="text" @keyup.enter.space="alertValue">
+
+                <hr>
+
+            </div>
+        </div>
+<div class="row my-5"><a href="app.html">Следующая =>></a></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            name: 'Vue',
+            a: 100,
+            isOk: true,
+            string: 'My name is Alex!',
+            search: {url: 'http://google.com', name: 'Google'},
+            link: '<a href="http://yandex.ru">Yandex</a>',
+            counter: 0,
+            counter2: 0,
+            title: 'Counter',
+            x: 0,
+            y: 0,
+            inputVal: 'Init value',
+            isActive: false,
+            color:'blue',
+            height:100
+        },
+        computed:{
+            getCssClasses:function () {
+                return{
+                    'red':this.isActive,
+                    'green':!this.isActive
+                }
+            },
+            circleClasses:function () {
+                return{
+                    'background':this.color,
+                    'height': this.height + 'px'
+                }
+            }
+        },
+        methods: {
+            // Отменить дефолтное событие
+            clickOnGoogle: function (event) {
+                event.preventDefault()
+            },
+            changeName: function (event) {
+                this.name = event.target.value
+            },
+            sayHello: function () {
+                return 'I am function'
+            },
+            riseCounter: function (num, str, event) {
+                this.counter += num;
+                this.title = str;
+                if (num === 5) {
+                    event.target.style.color = 'blue'
+                }
+                else if (num === 10) {
+                    event.target.style.color = 'orange'
+                }
+            },
+            onHover: function (event) {
+                event.target.style.color = 'red';
+            },
+            handleMouseMove: function (event) {
+                this.x = event.clientX;
+                this.y = event.clientY;
+            },
+            alertValue: function (event) {
+                alert(event.target.value)
+            },
+
+        }
+
+    })
+</script>
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
